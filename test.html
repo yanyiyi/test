@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style type="text/css">
+        html,
+        body,
+        #map-canvas {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        #map-iconTip img {
+            z-index: 1;
+            height: 30px;
+        }
+
+        /*#map-iconTip input{
+            height: 20px;
+            zoom:200%;
+        }*/
+
+        #map-iconTip {
+            position: absolute;
+            z-index: 1;
+            margin-top: 45px;
+            background-color: rgba(128, 64, 0, 0.6);
+            width: 350px;
+            -moz-user-select: none;
+            /*用以防止使用者反白Tip的內容*/
+        }
+
+        #map-iconTip p {
+            font-size: 14px;
+            font-family: 微軟正黑體, 標楷體;
+        }
+
+        /*test area start*/
+
+        #myTest {
+            background-color: rgba(12, 34, 56, 0.6);
+            padding-left: 135px;
+        }
+
+        /*將預設的checkbox隱藏，並將其index調為較高使其在圖片上方*/
+
+        #myTest input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 30px;
+            width: 30px;
+            z-index: 2;
+        }
+
+        /*設立一個calss來控制客製化的checkbox*/
+
+        .checkmark {
+            position: absolute;
+            margin-top: 5px;
+            margin-left: 5px;
+            height: 25px;
+            width: 25px;
+            background-color: #eee;
+        }
+
+        /*建立hover事件到checkbox上*/
+
+        #myTest:hover input~.checkmark {
+            background-color: #ccc;
+        }
+
+        /*建立checked狀態到checkbox上*/
+
+        #myTest input:checked~.checkmark {
+            background-color: #2196F3;
+        }
+
+        /*建立一個新圖層在客製化checkbox，並對其改寫風格*/
+
+        .checkmark:after {
+            content: "";
+            font-size: 20px;
+            position: absolute;
+            display: none;
+            /*以下為風格更改*/
+            left: 9px;
+            top: 5px;
+            width: 5px;
+            height: 10px;
+            border: solid white;
+            border-width: 0 3px 3px 0;
+            -webkit-transform: rotate(45deg);
+            -ms-transform: rotate(45deg);
+            transform: rotate(45deg);
+        }
+
+        /*設定當checkbox被勾選時上面的圖層出現*/
+
+        #myTest input:checked~.checkmark:after {
+            display: block;
+        }
+
+        /*test area end*/
+
+        /*將預設的checkbox隱藏，並將其index調為較高使其在圖片上方*/
+
+        #menu input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 30px;
+            width: 30px;
+            z-index: 2;
+        }
+
+        /*建立hover事件到checkbox上*/
+
+        #menu:hover input~.checkmark {
+            /*background-color: #ccc;*/
+        }
+
+        /*建立checked狀態到checkbox上*/
+
+        #menu input:checked~.checkmark {
+            background-color: rgb(230, 144, 57);
+        }
+
+        /*設定當checkbox被勾選時上面的圖層出現*/
+
+        #menu input:checked~.checkmark:after {
+            display: block;
+        }
+
+        /*側邊滑動選單*/
+
+        #menu {
+            background-color: rgba(128, 64, 0, 0.6);
+            position: absolute;
+            z-index: 1;
+            margin-top: 45px;
+            left: -350px;
+            width: 350px;
+            height: 370px;
+            -moz-user-select: none;
+            /*用以防止使用者反白Tip的內容*/
+        }
+
+        #menuBtn {
+            position: absolute;
+            margin-left: 344px;
+            height: 370px;
+            width: 50px;
+            margin-top: -366px;
+            
+        }
+
+        #menu p img {
+            padding-top: -10px;
+            height: 30px;
+        }
+        #menu p{
+            font-family: 微軟正黑體;
+            font-weight: 900;
+        }
+        /*Infowindow css start*/
+        #MapImage{
+            width: 300px;
+            margin-left: 20px;
+            margin-top: 20px;
+        }
+        #InfoTitle{
+            font-family: 微軟正黑體;
+            width: 300px;
+            color: black;
+            margin-left: 20px;
+            
+        }
+        #InfoText{
+            font-family: 微軟正黑體;
+            font-weight: 900;
+            width: 300px;
+            color: black;
+            margin-left: 20px;
+            margin-bottom: 20px;
+        }
+        #InfoWindow{
+            
+        }
+        /*Infowindow css end*/
+    </style>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBputq9w31cD2XzhNGVPdzL0x9xGz8xkiM"></script>
+
+    <script type="text/javascript">
+        var map;
+        function initialize() {
+
+            map = new google.maps.Map(document.getElementById("map-canvas"), {
+                    center: {
+                        lat: 24.8641784,
+                        lng: 121.2117869
+                    },
+                    zoom: 17,
+                styles: [{
+                            "elementType": "geometry",
+                            "stylers": [{
+                                "color": "#ebe3cd"
+                            }]
+                        },
+                        {
+                            "elementType": "geometry.fill",
+                            "stylers": [{
+                                "color": "#ebe3cd"
+                            }]
+                        },
+                        {
+                            "elementType": "labels.text.fill",
+                            "stylers": [{
+                                "color": "#523735"
+                            }]
+                        },
+                        {
+                            "elementType": "labels.text.stroke",
+                            "stylers": [{
+                                "color": "#f5f1e6"
+                            }]
+                        },
+                        {
+                            "featureType": "administrative",
+                            "elementType": "labels.icon",
+                            "stylers": [{
+                                "color": "#e083ed"
+                            }]
+                        },
+                        {
+                            "featureType": "administrative.land_parcel",
+                            "elementType": "geometry.stroke",
+                            "stylers": [{
+                                "color": "#dcd2be"
+                            }]
+                        },
+                        {
+                            "featureType": "administrative.neighborhood",
+                            "elementType": "labels.text.fill",
+                            "stylers": [{
+                                "color": "#804000"
+                            }]
+                        },
+                        {
+                            "featureType": "landscape.man_made",
+                            "elementType": "geometry",
+                            "stylers": [{
+                                "color": "#f7fab1"
+                            }]
+                        },
+                        {
+                            "featureType": "landscape.natural",
+                            "elementType": "geometry",
+                            "stylers": [{
+                                "color": "#f7fab1"
+                            }]
+                        },
+                        {
+                            "featureType": "poi",
+                            "elementType": "geometry",
+                            "stylers": [{
+                                "color": "#dfd2ae"
+                            }]
+                        },
+                        {
+                            "featureType": "poi",
+                            "elementType": "labels.text.fill",
+                            "stylers": [{
+                                "color": "#93817c"
+                            }]
+                        },
+                        {
+                            "featureType": "poi.attraction",
+                            "elementType": "geometry",
+                            "stylers": [{
+                                "color": "#c5c4b1"
+                            }]
+                        },
+                        {
+                            "featureType": "poi.business",
+                            "elementType": "geometry",
+                            "stylers": [{
+                                "color": "#c5c4b1"
+                            }]
+                        },
+                        {
+                            "featureType": "poi.business",
+                            "elementType": "geometry.fill",
+                            "stylers": [{
+                                "color": "#6df85f"
+                            }]
+                        },
+                        {
+                            "featureType": "poi.government",
+                            "elementType": "geometry",
+                            "stylers": [{
+                                "color": "#c5c4b1"
+                            }]
+                        },
+                        {
+                            "featureType": "poi.medical",
+                            "elementType": "geometry",
+                            "stylers": [{
+                                "color": "#c5c4b1"
+                            }]
+                        },
+                        {
+                            "featureType": "poi.park",
+                            "elementType": "geometry.fill",
+                            "stylers": [{
+                                "color": "#86e83e"
+                            }]
+                        },
+                        {
+                            "featureType": "poi.park",
+                            "elementType": "labels.text.fill",
+                            "stylers": [{
+                                "color": "#447530"
+                            }]
+                        },
+                        {
+                            "featureType": "poi.place_of_worship",
+                            "elementType": "geometry",
+                            "stylers": [{
+                                "color": "#c5c4b1"
+                            }]
+                        },
+                        {
+                            "featureType": "poi.school",
+                            "elementType": "geometry.fill",
+                            "stylers": [{
+                                "color": "#c5c4b1"
+                            }]
+                        },
+                        {
+                            "featureType": "poi.sports_complex",
+                            "elementType": "geometry.fill",
+                            "stylers": [{
+                                "color": "#c6c4b0"
+                            }]
+                        },
+                        {
+                            "featureType": "road",
+                            "elementType": "geometry",
+                            "stylers": [{
+                                "color": "#f5f1e6"
+                            }]
+                        },
+                        {
+                            "featureType": "road.arterial",
+                            "elementType": "geometry",
+                            "stylers": [{
+                                "color": "#ffffff"
+                            }]
+                        },
+                        {
+                            "featureType": "road.highway",
+                            "elementType": "geometry",
+                            "stylers": [{
+                                "color": "#ffffff"
+                            }]
+                        },
+                        {
+                            "featureType": "road.highway",
+                            "elementType": "geometry.stroke",
+                            "stylers": [{
+                                "color": "#f3f3f3"
+                            }]
+                        },
+                        {
+                            "featureType": "road.highway.controlled_access",
+                            "elementType": "geometry",
+                            "stylers": [{
+                                "color": "#ffffff"
+                            }]
+                        },
+                        {
+                            "featureType": "road.highway.controlled_access",
+                            "elementType": "geometry.stroke",
+                            "stylers": [{
+                                "color": "#ffffff"
+                            }]
+                        },
+                        {
+                            "featureType": "road.local",
+                            "elementType": "geometry",
+                            "stylers": [{
+                                "color": "#ffffff"
+                            }]
+                        },
+                        {
+                            "featureType": "road.local",
+                            "elementType": "labels.text.fill",
+                            "stylers": [{
+                                "color": "#806b63"
+                            }]
+                        },
+                        {
+                            "featureType": "transit.line",
+                            "elementType": "geometry",
+                            "stylers": [{
+                                "color": "#dfd2ae"
+                            }]
+                        },
+                        {
+                            "featureType": "transit.line",
+                            "elementType": "labels.text.fill",
+                            "stylers": [{
+                                "color": "#8f7d77"
+                            }]
+                        },
+                        {
+                            "featureType": "transit.line",
+                            "elementType": "labels.text.stroke",
+                            "stylers": [{
+                                "color": "#ebe3cd"
+                            }]
+                        },
+                        {
+                            "featureType": "transit.station",
+                            "elementType": "geometry",
+                            "stylers": [{
+                                "color": "#dfd2ae"
+                            }]
+                        },
+                        {
+                            "featureType": "water",
+                            "elementType": "geometry.fill",
+                            "stylers": [{
+                                "color": "#b9d3c2"
+                            }]
+                        },
+                        {
+                            "featureType": "water",
+                            "elementType": "labels.text.fill",
+                            "stylers": [{
+                                "color": "#92998d"
+                            }]
+                        }
+                    ] //end styles
+                }
+
+            )
+        } // end initialize
+
+        google.maps.event.addDomListener(window, 'load', initialize); /*使用事件監聽器來控制網頁載入後地圖再載入*/
+    </script>
+
+    <script>
+        $(document).ready(function (){
+            var IsMenuOpen = false;
+            $('#menuBtn').click(function() {
+                //console.log("menuClick");
+                if (IsMenuOpen) {
+                    $('#menu').animate({
+                        left: "-350px"
+                    }, 500);
+                    IsMenuOpen = false;
+                } else {
+                    $('#menu').animate({
+                        left: "0px"
+                    }, 500);
+                    IsMenuOpen = true;
+                }
+            }); //end menuBtnClick 在此加入側邊頁面的滑動動畫
+        }); // end ready
+    </script>
+
+    <script src="./JS/GetAndReadCsv.js"></script>
+
+
+
+</head>
+
+<body onselectstart="return false">
+
+<!--
+    <div id="map-iconTip">
+        <p><img src="./TestIcon/RedDiamond.png" alt="">鍾延豪文學地景</p>
+
+        <p><img src="./TestIcon/YellowCircle.png" alt=""><img src="./TestIcon/BlueCircle.png" alt=""><img src="./TestIcon/GreenCircle.png" alt=""><img src="./TestIcon/RedBulb.png" alt="">鍾肇政文學地景</p>
+
+        <p> <img src="./TestIcon/Restaurant.png" alt="">鍾肇政愛吃的餐館</p>
+
+        <p><img src="./TestIcon/YellowBulb.png" alt="">鍾肇政居住地</p>
+
+        <p><img src="./TestIcon/YellowGreenBulb.png" alt="">文學館舍及藝文空間</p>
+
+        <p><img src="./TestIcon/RedBulb.png" alt="">全臺文學館舍</p>
+
+        <p><img src="./TestIcon/YellowGreenDiamond.png" alt="">馮輝岳及向鴻全文學地景</p>
+        <p>---分類選擇---</p>
+        <p id="myTest"></p>
+
+    </div>
+-->
+
+
+    <div id="menu">
+        <p id="Red_Diamond"></p>
+        <p id="YBGR_Group"></p>
+        <p id="Restaurant"></p>
+        <p id="Yellow_Bulb"></p>
+        <p id="YG_Buld"></p>
+        <p id="Red_Buld"></p>
+        <p id="YG_Diamond"></p>
+        <img id="menuBtn" src="./TestIcon/menuBtn.png">
+
+    </div>
+
+    <div id="map-canvas"></div>
+
+    <!--    <iframe width="600" height="450" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBputq9w31cD2XzhNGVPdzL0x9xGz8xkiM&q=桃園文化局" allowfullscreen></iframe>-->
+    <!--https://www.google.com/maps/embed/v1/place?key=你的金鑰&q=地名-->
+    <!--place為地點模式，可用來定義一個位置地點 q為搜尋關鍵字-->
+
+    <!--    <iframe width="600" height="450" src="https://www.google.com/maps/embed/v1/directions?key=AIzaSyBputq9w31cD2XzhNGVPdzL0x9xGz8xkiM&origin=桃園文化局&waypoints=桃園市政府|桃園府前郵局&destination=桃園文化局" frameborder="0" style="border:0"></iframe>-->
+    <!--
+directions 為路徑模式，可策畫路徑圖
+origin 為路線起點(必須存在)
+destination 為路線終點(必須存在)
+waypoints 為路徑點，其中可用「|」符號來新增路徑點
+mode 為旅行方式 包含driving、walking、bicycling、transit、flying
+avoid 避開特殊路況 包含tolls(收費站)、ferries(渡輪)、highways，可用|符號來新增特殊路況
+units 路長單位 包含metric(公制)、imperial(英制)
+-->
+    <!--    <iframe width="600" height="450" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/search?key=AIzaSyBputq9w31cD2XzhNGVPdzL0x9xGz8xkiM&q=7-11&zoom=14&center=24.9939872,121.2981107" allowfullscreen></iframe>-->
+
+    <!--
+search為搜尋模式，可以搜尋附近q關鍵字搜尋的相關地點
+zoom 為地圖的縮放大小，範圍是0到21
+center 為地圖中心點經緯度
+-->
+
+    <!--    <iframe width="600" height="450" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/view?key=AIzaSyBputq9w31cD2XzhNGVPdzL0x9xGz8xkiM&zoom=17&center=24.9939872,121.2981107&maptype=satellite" allowfullscreen></iframe>-->
+
+    <!--
+view為檢視模式，可瀏覽指定中心點地圖
+center 為中心點經緯度(必須存在)
+maptype 為地圖類型 包含roadmap和satellite(衛星空照圖)
+language 為定義UI元素語言
+region 為根據地緣政治敏感度，定義要顯示的適當邊界與標籤
+-->
+
+    <!--    <iframe width="600" height="450" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/streetview?key=AIzaSyBputq9w31cD2XzhNGVPdzL0x9xGz8xkiM&location=24.9942682,121.3002827&heading=60&pitch=30&fov=90" allowfullscreen></iframe>-->
+
+    <!--
+streetview 為街景模式
+location 經緯度，以逗號分隔(必須存在)
+pano 特定的街景ID (若無location存在則此必須存在)
+heading 從北方順時針旋轉的角度指出相機指南針所指的方向(-180~360)
+pitch 指定相機往上或往下的角度預設為0(-90~90)
+fov 影像水平視野，數字越大視野越廣，預設為90(10~100)
+language 語言
+region 地緣標籤
+-->
+
+
+
+</body>
+
+</html>

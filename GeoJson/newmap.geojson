@@ -1,0 +1,61 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.3004,
+          24.99402
+        ]
+      },
+      "properties": {
+        "geometry": "Point",
+        "icon": "TestIcon/icon.jpg"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.2126,
+          24.86403
+        ]
+      },
+      "properties": {
+        "geometry": "Point",
+        "icon": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.2133,
+          24.86278
+        ]
+      },
+      "properties": {
+        "geometry": "Point",
+        "icon": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.1945,
+          24.88231
+        ]
+      },
+      "properties": {
+        "geometry": "Point",
+        "icon": "https://dogecoin.com/imgs/dogecoin-300.png"
+      }
+    }
+  ]
+}
